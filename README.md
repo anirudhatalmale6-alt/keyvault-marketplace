@@ -60,30 +60,45 @@ The seeder creates:
 - Laravel 12 + Vue 3 + Inertia project, production build pipeline
 - Authentication: registration, login, **email verification**, password reset,
   profile management (2FA lands in a later phase)
-- Branded, responsive storefront (hero, categories, features) with header search,
-  currency & language switchers
+- **Roles & permissions** (Admin / Staff / Customer) via `spatie/laravel-permission`,
+  with granular per-area permissions and route middleware
+- **Redis queues + Laravel Horizon** for background jobs (powers the future
+  supplier sync & instant-delivery engine); cache & logging configured
+- **API-ready** REST layer (Laravel Sanctum) — `/api/v1/*` catalog + account endpoints
+- Settings system (cached key/value store)
+- MTCGame / Loaded-style storefront: hero banner carousel + featured sidebar,
+  category chips, horizontal product rails, portrait product cards with pricing,
+  header search, currency & language switchers, trust strip, cart
 - **Dark / light mode** with a manual toggle that persists (no flash on load)
 - Customer dashboard: wallet balance, order history, referral code
 - Core database schema & Eloquent models for the whole marketplace:
   `categories`, `products`, `product_keys` (encrypted), `suppliers` (encrypted
   credentials), `orders`, `order_items`, `wallets` + `wallet_transactions`,
-  `currencies`, `wishlists`, `settings`
+  `currencies`, `wishlists`, `settings`, roles/permissions tables
 - Atomic, row-locked wallet credit/debit with transaction ledger
+- Demo catalog seeded (28 products across 4 categories) so the store looks populated
 - Automated tests (auth flows, storefront, wallet logic) — `php artisan test`
 
-## Roadmap
+## Roadmap (9 phases)
 
-1. **Foundation** — auth, storefront shell, schema, dark/light ✅ *(this phase)*
-2. **Catalog & Store** — products, categories, product pages, search, cart, wishlist
-3. **Wallet, Checkout & Stripe** — checkout flow, first payment gateway, orders
-4. **Supplier Automation Engine** — driver layer, auto import, price/stock sync,
-   auto-purchase keys, instant delivery, retries, logs
-5. **More Payments** — PayPal, crypto (BTC / USDT TRC20), local methods
-6. **Growth & Support** — promo codes, referrals, multi-currency conversion,
-   multi-language (EN/FR/AR), support tickets, 2FA
-7. **Admin Panel** — products, users, orders, suppliers, pricing rules, currencies,
-   coupons, analytics, taxes, activity logs, roles & permissions, notifications
-8. **Deployment** — Docker, VPS deploy, rate limiting, audit logs, hardening
+1. **Foundation** — auth, roles, queues, API, storefront, schema ✅ *(this phase)*
+2. **Store & Product System** — categories, brands, product pages, search, wishlist,
+   related products, reviews, SEO, attributes (platform/region/edition), digital delivery
+3. **Supplier Integration** — supplier API architecture, multiple suppliers, lowest-price
+   selection, stock sync, auto imports/updates, cron jobs, error logs, manual sync
+4. **Checkout & Payments** — wallet, Stripe, PayPal, crypto (BTC/USDT TRC20), order
+   history, refunds, invoice generation
+5. **Instant Delivery Engine** — reserve stock, auto-purchase key, encrypt & store,
+   instant delivery + email, retry & supplier failover, price comparison, priority/backup
+6. **Multi-Marketplace Selling** — G2A / Eneba / Kinguin integration, auto stock & price
+   updates, auto order handling, margin & marketplace-specific pricing
+7. **Growth Features** — coupons, affiliate, referrals, loyalty points, multi-currency,
+   multi-language, support tickets, 2FA, newsletter, reviews
+8. **Advanced Admin Panel** — dashboard, sales/profit/supplier analytics, full CRUD,
+   pricing rules, currencies, taxes, coupons, roles, audit logs, notifications, queue
+   monitoring, failed jobs, system & API health
+9. **Security & Deployment** — Docker, VPS, SSL, rate limiting, daily backups, encrypted
+   API keys, Cloudflare, firewall, monitoring, performance optimisation
 
 ## Testing
 

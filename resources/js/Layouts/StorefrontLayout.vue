@@ -16,9 +16,17 @@ const mobileOpen = ref(false);
 
 <template>
     <div class="flex min-h-screen flex-col bg-gray-50 text-gray-900 dark:bg-gray-950 dark:text-gray-100">
-        <!-- Announcement bar -->
-        <div class="bg-brand-600 py-1.5 text-center text-xs font-medium text-white">
-            Instant delivery · Secure payments · 24/7 support
+        <!-- Trust strip -->
+        <div class="bg-gray-900 py-1.5 text-white dark:bg-black">
+            <div class="mx-auto flex max-w-7xl items-center justify-center gap-6 px-4 text-xs font-medium">
+                <span class="flex items-center gap-1.5">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5 text-green-400" viewBox="0 0 24 24" fill="currentColor"><path d="m12 2 2.4 7.4H22l-6 4.4 2.3 7.2L12 16.6 5.7 21l2.3-7.2-6-4.4h7.6z"/></svg>
+                    Excellent 4.8/5
+                </span>
+                <span class="hidden sm:inline">Instant delivery</span>
+                <span class="hidden sm:inline">Secure payments</span>
+                <span class="hidden md:inline">24/7 support</span>
+            </div>
         </div>
 
         <!-- Header -->
@@ -53,6 +61,11 @@ const mobileOpen = ref(false);
                     <div class="hidden sm:block"><LocaleSwitcher /></div>
                     <div class="hidden sm:block"><CurrencySwitcher /></div>
                     <ThemeToggle />
+
+                    <!-- Cart -->
+                    <button aria-label="Cart" class="relative inline-flex h-9 w-9 items-center justify-center rounded-lg border border-gray-200 text-gray-600 transition hover:bg-gray-100 dark:border-gray-700 dark:text-gray-300 dark:hover:bg-gray-800">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+                    </button>
 
                     <template v-if="user">
                         <Link :href="route('dashboard')" class="hidden rounded-lg bg-brand-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-brand-700 sm:inline-block">

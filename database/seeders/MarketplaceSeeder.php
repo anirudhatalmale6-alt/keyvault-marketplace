@@ -8,6 +8,7 @@ use App\Models\Setting;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class MarketplaceSeeder extends Seeder
 {
@@ -57,5 +58,8 @@ class MarketplaceSeeder extends Seeder
             $admin->markEmailAsVerified();
         }
         $admin->ensureWallet();
+        if (Role::whereName('Admin')->exists()) {
+            $admin->syncRoles(['Admin']);
+        }
     }
 }
