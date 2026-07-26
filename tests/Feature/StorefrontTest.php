@@ -22,4 +22,17 @@ class StorefrontTest extends TestCase
     {
         $this->get('/dashboard')->assertRedirect('/login');
     }
+
+    public function test_product_detail_page_loads(): void
+    {
+        $this->seed();
+
+        $product = \App\Models\Product::active()->firstOrFail();
+
+        $this->get("/product/{$product->slug}")
+            ->assertStatus(200)
+            ->assertInertia(fn ($page) => $page
+                ->component('Storefront/Product')
+                ->where('product.name', $product->name));
+    }
 }

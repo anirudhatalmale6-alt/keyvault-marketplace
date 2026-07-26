@@ -1,5 +1,6 @@
 <script setup>
 import { computed } from 'vue';
+import { Link } from '@inertiajs/vue3';
 import { useCurrency } from '@/composables/useCurrency';
 
 const props = defineProps({
@@ -22,8 +23,7 @@ const discount = computed(() => {
     const base = Number(props.product?.base_price || 0);
     const cost = Number(props.product?.cost_price || 0);
     if (base > 0 && cost > 0 && cost < base) {
-        // Show an illustrative "was" price above the sell price.
-        const was = base * 1.2;
+        const was = base * 1.25;
         return Math.round(((was - base) / was) * 100);
     }
     return 0;
@@ -40,40 +40,31 @@ const initials = computed(() =>
 </script>
 
 <template>
-    <div class="group w-full cursor-pointer overflow-hidden rounded-xl border border-gray-200 bg-white transition hover:-translate-y-1 hover:shadow-xl dark:border-gray-800 dark:bg-gray-900">
-        <!-- Artwork -->
-        <div class="relative aspect-[3/4] overflow-hidden" :style="{ background: gradient }">
+    <div class="group flex h-full flex-col overflow-hidden rounded-xl bg-white shadow-sm ring-1 ring-gray-200 transition hover:-translate-y-1 hover:shadow-xl dark:bg-navy-800 dark:ring-navy-700">
+        <!-- Box art -->
+        <Link :href="route('product.show', product.slug)" class="relative block aspect-[3/4] overflow-hidden rounded-t-xl" :style="{ background: gradient }">
             <div class="absolute inset-0 opacity-25" style="background-image: radial-gradient(circle at 30% 20%, white 1.5px, transparent 1.5px); background-size: 22px 22px;"></div>
-
-            <span v-if="discount" class="absolute left-2 top-2 z-10 rounded-md bg-amber-400 px-2 py-0.5 text-xs font-bold text-gray-900 shadow">
-                -{{ discount }}%
-            </span>
-            <span class="absolute right-2 top-2 z-10 rounded-md bg-black/30 px-2 py-0.5 text-[10px] font-medium text-white backdrop-blur">
-                {{ platform }}
-            </span>
 
             <div class="flex h-full w-full flex-col items-center justify-center px-3 text-center">
                 <span class="text-3xl font-black tracking-tight text-white/90 drop-shadow">{{ initials }}</span>
                 <span class="mt-2 line-clamp-3 text-sm font-bold leading-tight text-white drop-shadow">{{ product.name }}</span>
             </div>
 
-            <!-- Hover buy overlay -->
-            <div class="absolute inset-x-0 bottom-0 translate-y-full bg-black/40 py-2 text-center text-xs font-semibold text-white opacity-0 backdrop-blur transition group-hover:translate-y-0 group-hover:opacity-100">
-                View product
-            </div>
-        </div>
+            <!-- platform chip bottom-left -->
+            <span class="absolute bottom-2 left-2 rounded bg-black/40 px-2 py-0.5 text-[10px] font-semibold text-white backdrop-blur">{{ platform }}</span>
+            <!-- discount badge bottom-right -->
+            <span v-if="discount" class="absolute bottom-2 right-2 rounded bg-red-600 px-2 py-0.5 text-[11px] font-bold text-white shadow">-{{ discount }}% OFF</span>
+        </Link>
 
-        <!-- Footer -->
-        <div class="p-3">
-            <p class="line-clamp-1 text-sm font-medium text-gray-800 dark:text-gray-100">{{ product.name }}</p>
-            <div class="mt-1 flex items-center justify-between">
-                <div>
-                    <p class="text-[11px] text-gray-400">from</p>
-                    <p class="text-base font-bold text-brand-600 dark:text-brand-400">{{ format(product.base_price) }}</p>
-                </div>
-                <span class="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-600 text-white transition group-hover:bg-brand-700">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
-                </span>
+        <!-- Details -->
+        <div class="flex flex-1 flex-col p-3">
+            <Link :href="route('product.show', product.slug)" class="line-clamp-2 min-h-[2.5rem] text-xs font-bold uppercase leading-snug text-gray-800 hover:text-brand-500 dark:text-gray-100">{{ product.name }}</Link>
+            <p class="mt-2 text-lg font-extrabold text-gray-900 dark:text-white">{{ format(product.base_price) }}</p>
+
+            <!-- actions -->
+            <div class="mt-3 flex gap-2">
+                <button class="flex-1 rounded-lg border border-gray-300 py-2 text-xs font-bold uppercase text-gray-700 transition hover:bg-gray-100 dark:border-navy-600 dark:text-gray-200 dark:hover:bg-navy-700">Add</button>
+                <button class="flex-1 rounded-lg bg-grass-500 py-2 text-xs font-bold uppercase text-white transition hover:bg-grass-600">Buy</button>
             </div>
         </div>
     </div>
