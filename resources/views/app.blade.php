@@ -22,8 +22,26 @@
         </script>
 
         <!-- Fonts -->
+        @php
+            $appearance = \App\Services\Appearance::all();
+            $font = $appearance['font'] ?? 'Poppins';
+            $fontSlug = strtolower(str_replace(' ', '-', $font));
+            // hex -> "r g b" for rgb(var()) usage
+            $rgb = function ($hex) {
+                $hex = ltrim((string) $hex, '#');
+                if (strlen($hex) === 3) { $hex = $hex[0].$hex[0].$hex[1].$hex[1].$hex[2].$hex[2]; }
+                return implode(' ', [hexdec(substr($hex,0,2)), hexdec(substr($hex,2,2)), hexdec(substr($hex,4,2))]);
+            };
+        @endphp
         <link rel="preconnect" href="https://fonts.bunny.net">
-        <link href="https://fonts.bunny.net/css?family=poppins:400,500,600,700,800&display=swap" rel="stylesheet" />
+        <link href="https://fonts.bunny.net/css?family={{ $fontSlug }}:400,500,600,700,800&display=swap" rel="stylesheet" />
+        <style>
+            :root {
+                --font-sans: '{{ $font }}';
+                --c-primary: {{ $rgb($appearance['color_primary'] ?? '#4f46e5') }};
+                --c-buy: {{ $rgb($appearance['color_buy'] ?? '#2fbf71') }};
+            }
+        </style>
 
         <!-- Scripts -->
         @routes

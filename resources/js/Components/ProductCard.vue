@@ -58,13 +58,13 @@ const initials = computed(() =>
 
         <!-- Details -->
         <div class="flex flex-1 flex-col p-3">
-            <Link :href="route('product.show', product.slug)" class="line-clamp-2 min-h-[2.5rem] text-xs font-bold uppercase leading-snug text-gray-800 hover:text-brand-500 dark:text-gray-100">{{ product.name }}</Link>
+            <Link :href="route('product.show', product.slug)" class="line-clamp-2 min-h-[2.5rem] text-xs font-bold uppercase leading-snug text-gray-800 hover:text-primary dark:text-gray-100">{{ product.name }}</Link>
             <p class="mt-2 text-lg font-extrabold text-gray-900 dark:text-white">{{ format(product.base_price) }}</p>
 
             <!-- actions -->
             <div class="mt-3 flex gap-2">
                 <button class="flex-1 rounded-lg border border-gray-300 py-2 text-xs font-bold uppercase text-gray-700 transition hover:bg-gray-100 dark:border-navy-600 dark:text-gray-200 dark:hover:bg-navy-700">Add</button>
-                <button class="flex-1 rounded-lg bg-grass-500 py-2 text-xs font-bold uppercase text-white transition hover:bg-grass-600">Buy</button>
+                <button class="flex-1 rounded-lg bg-buy py-2 text-xs font-bold uppercase text-white transition hover:brightness-110">Buy</button>
             </div>
         </div>
     </div>

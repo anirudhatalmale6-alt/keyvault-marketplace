@@ -44,6 +44,9 @@ const showingNavigationDropdown = ref(false);
                         </div>
 
                         <div class="hidden sm:ms-6 sm:flex sm:items-center">
+                            <a v-if="$page.props.auth.user.role === 'admin'" href="/admin" class="me-3 rounded-lg bg-indigo-600 px-3 py-1.5 text-sm font-semibold text-white transition hover:bg-indigo-700">
+                                Admin Panel
+                            </a>
                             <a href="/" class="me-3 text-sm font-medium text-gray-500 transition hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300">
                                 Store
                             </a>

@@ -6,6 +6,7 @@ import ProductGrid from '@/Components/ProductGrid.vue';
 
 const page = usePage();
 const site = computed(() => page.props.site || { name: 'Marketplace' });
+const theme = computed(() => page.props.theme || {});
 
 const props = defineProps({
     categories: { type: Array, default: () => [] },
@@ -14,21 +15,47 @@ const props = defineProps({
     stats: { type: Object, default: () => ({}) },
 });
 
-// Promo slides for the hero carousel (centre slide + side peeks like Loaded).
-const slides = [
-    { title: 'Summer of Savings', sub: 'Up to 90% off games & DLCs', from: '#4338ca', to: '#6d28d9', cta: 'Shop deals' },
-    { title: 'Earn 5% Cashback', sub: 'On all games & DLCs — logged-in users', from: '#1d4ed8', to: '#0ea5e9', cta: 'Shop now' },
-    { title: 'Gift Cards, Instantly', sub: 'PSN, Xbox, Steam, Amazon & more', from: '#db2777', to: '#f97316', cta: 'Browse cards' },
-    { title: 'Mobile Top-Ups', sub: 'PUBG UC, Free Fire, Valorant Points', from: '#059669', to: '#14b8a6', cta: 'Top up now' },
-];
-const current = ref(1);
+// Promo slides come from the admin appearance config (fallback to a default set).
+const slides = computed(() => {
+    const s = theme.value.hero_slides;
+    if (Array.isArray(s) && s.length) {
+        return s.map((x) => ({ title: x.title, sub: x.subtitle, cta: x.cta || 'Shop now', from: x.from || '#4338ca', to: x.to || '#6d28d9' }));
+    }
+    return [{ title: 'Welcome', sub: 'Browse our latest deals', cta: 'Shop now', from: '#4338ca', to: '#6d28d9' }];
+});
+
+// Section visibility/order from admin config.
+const sectionCfg = computed(() => Array.isArray(theme.value.sections) ? theme.value.sections : []);
+const sectionEnabled = (key) => {
+    const s = sectionCfg.value.find((x) => x.key === key);
+    return s ? s.enabled !== false : true;
+};
+const orderedSections = computed(() => {
+    const known = sectionCfg.value.length ? sectionCfg.value : [
+        { key: 'best_sellers', enabled: true },
+        { key: 'category_rails', enabled: true },
+        { key: 'cta', enabled: true },
+    ];
+    return known.filter((s) => s.enabled !== false).map((s) => s.key);
+});
+
+// Optionally limit which category rails show (admin config), else all.
+const visibleRails = computed(() => {
+    const allowed = theme.value.homepage_categories;
+    if (Array.isArray(allowed) && allowed.length) {
+        return props.rails.filter((r) => allowed.includes(r.slug));
+    }
+    return props.rails;
+});
+
+const current = ref(slides.value.length > 1 ? 1 : 0);
 let timer = null;
-const go = (i) => { current.value = (i + slides.length) % slides.length; };
+const go = (i) => { const n = slides.value.length; current.value = ((i % n) + n) % n; };
 onMounted(() => { timer = setInterval(() => go(current.value + 1), 5000); });
 onUnmounted(() => timer && clearInterval(timer));
 
-const prevIdx = computed(() => (current.value - 1 + slides.length) % slides.length);
-const nextIdx = computed(() => (current.value + 1) % slides.length);
+const prevIdx = computed(() => (current.value - 1 + slides.value.length) % slides.value.length);
+const nextIdx = computed(() => (current.value + 1) % slides.value.length);
 </script>
 
 <template>
@@ -70,19 +97,21 @@ const nextIdx = computed(() => (current.value + 1) % slides.length);
             </div>
         </section>
 
-        <!-- Best Sellers -->
-        <ProductGrid v-if="featured.length" title="Best Sellers" :products="featured" :limit="10" />
+        <!-- Homepage sections rendered in the admin-configured order -->
+        <template v-for="key in orderedSections" :key="key">
+            <ProductGrid v-if="key === 'best_sellers' && featured.length" title="Best Sellers" :products="featured" :limit="10" />
 
-        <!-- Category sections -->
-        <ProductGrid v-for="rail in rails" :key="rail.slug" :title="rail.title" :products="rail.products" :limit="5" />
+            <template v-else-if="key === 'category_rails'">
+                <ProductGrid v-for="rail in visibleRails" :key="rail.slug" :title="rail.title" :products="rail.products" :limit="5" />
+            </template>
 
-        <!-- CTA -->
-        <section class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
-            <div class="overflow-hidden rounded-2xl bg-gradient-to-r from-navy-700 to-brand-700 px-8 py-12 text-center">
-                <h2 class="text-2xl font-extrabold text-white sm:text-3xl">Create your free account</h2>
-                <p class="mx-auto mt-2 max-w-xl text-gray-200">Wallet, order history, wishlist and instant delivery — all in one place.</p>
-                <Link :href="route('register')" class="mt-6 inline-block rounded-full bg-grass-500 px-8 py-3 text-sm font-bold uppercase text-white transition hover:bg-grass-600">Get started</Link>
-            </div>
-        </section>
+            <section v-else-if="key === 'cta'" class="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
+                <div class="overflow-hidden rounded-2xl bg-gradient-to-r from-navy-700 to-navy-600 px-8 py-12 text-center">
+                    <h2 class="text-2xl font-extrabold text-white sm:text-3xl">Create your free account</h2>
+                    <p class="mx-auto mt-2 max-w-xl text-gray-200">Wallet, order history, wishlist and instant delivery — all in one place.</p>
+                    <Link :href="route('register')" class="mt-6 inline-block rounded-full bg-buy px-8 py-3 text-sm font-bold uppercase text-white transition hover:brightness-110">Get started</Link>
+                </div>
+            </section>
+        </template>
     </StorefrontLayout>
 </template>

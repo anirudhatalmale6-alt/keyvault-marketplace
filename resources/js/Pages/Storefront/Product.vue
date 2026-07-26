@@ -39,9 +39,9 @@ const denominations = computed(() => {
         <div class="mx-auto max-w-7xl px-4 py-6 sm:px-6 lg:px-8">
             <!-- Breadcrumb -->
             <nav class="mb-6 flex flex-wrap items-center gap-2 text-sm text-gray-500 dark:text-gray-400">
-                <Link href="/" class="hover:text-brand-500">Home</Link>
+                <Link href="/" class="hover:text-primary">Home</Link>
                 <span>/</span>
-                <span v-if="product.category" class="hover:text-brand-500">{{ product.category.name }}</span>
+                <span v-if="product.category" class="hover:text-primary">{{ product.category.name }}</span>
                 <span v-if="product.category">/</span>
                 <span class="text-gray-700 dark:text-gray-200">{{ product.name }}</span>
             </nav>
@@ -82,20 +82,20 @@ const denominations = computed(() => {
                     <!-- Actions -->
                     <div class="mt-5 grid grid-cols-2 gap-3">
                         <button class="rounded-lg border border-gray-300 py-3 text-sm font-bold uppercase text-gray-700 transition hover:bg-gray-100 dark:border-navy-600 dark:text-gray-100 dark:hover:bg-navy-800">Add to cart</button>
-                        <button class="rounded-lg bg-grass-500 py-3 text-sm font-bold uppercase text-white transition hover:bg-grass-600">Buy now</button>
+                        <button class="rounded-lg bg-buy py-3 text-sm font-bold uppercase text-white transition hover:brightness-110">Buy now</button>
                     </div>
 
                     <!-- Stock badges -->
                     <div class="mt-5 flex flex-wrap gap-x-8 gap-y-2 text-sm">
-                        <span class="flex items-center gap-2" :class="product.in_stock ? 'text-grass-500' : 'text-red-500'">
+                        <span class="flex items-center gap-2" :class="product.in_stock ? 'text-buy' : 'text-red-500'">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
                             {{ product.in_stock ? 'In Stock' : 'Out of Stock' }}
                         </span>
-                        <span class="flex items-center gap-2 text-grass-500">
+                        <span class="flex items-center gap-2 text-buy">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
                             Digital Key Code
                         </span>
-                        <span class="flex items-center gap-2 text-grass-500">
+                        <span class="flex items-center gap-2 text-buy">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
                             Instant Delivery
                         </span>

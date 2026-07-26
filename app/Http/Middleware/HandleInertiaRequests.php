@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Models\Category;
 use App\Models\Currency;
 use App\Models\Setting;
+use App\Services\Appearance;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -42,6 +43,8 @@ class HandleInertiaRequests extends Middleware
                 'name'    => Setting::get('site_name', config('app.name')),
                 'tagline' => Setting::get('site_tagline', ''),
             ],
+            // Admin-controllable appearance & content config.
+            'theme' => fn () => Appearance::all(),
             'currencies' => fn () => Currency::active()->orderBy('position')
                 ->get(['code', 'name', 'symbol', 'exchange_rate', 'is_default']),
             'locales' => Setting::get('supported_locales', ['en']),

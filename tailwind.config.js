@@ -15,9 +15,13 @@ export default {
     theme: {
         extend: {
             fontFamily: {
-                sans: ['Poppins', ...defaultTheme.fontFamily.sans],
+                // Admin-controllable font family (falls back to Poppins).
+                sans: ['var(--font-sans)', 'Poppins', ...defaultTheme.fontFamily.sans],
             },
             colors: {
+                // Admin-controllable semantic colors (driven by CSS variables).
+                primary: 'rgb(var(--c-primary) / <alpha-value>)',
+                buy: 'rgb(var(--c-buy) / <alpha-value>)',
                 // Loaded-style deep navy / indigo storefront palette
                 navy: {
                     50: '#eeeefb',
